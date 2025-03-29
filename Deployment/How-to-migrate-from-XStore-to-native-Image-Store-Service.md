@@ -35,13 +35,17 @@ If running on PAAS V1, Port 445 should be added as input endpoint for SMB copy
 2.	Do first fabric upgrade to create the native image store. The purpose of the first fabric upgrade is to create an extra native image store beside the current image store. Actually, the new native image store is empty and unused, however it’s still observable by querying the system service.
    
 ```json
+
 Get-WindowsFabricService -ApplicationName fabric:/System
+
 ```
 
 3.	Use image store copy tool to copy the content from source image store to the target native image store.
 
 ```json
+
 ImageStoreCopier.exe /ConnectionEndpoint:"MININT-8MRQ409.redmond.corp.microsoft.com:19000" /CredentialType:X509 /ServerCommonName:"WinfabDevClusterCert" /FindType:"FindBySubjectName" /FindValue:"CN=WinfabDevClusterCert" /StoreLocation:"LocalMachine" /StoreName:"My" /SourceImageStore:"file:C:\ProgramData\Windows Fabric\ImageStore" /DestinationImageStore:"fabric:ImageStore"
+
 ```
 
 (Note: once the copy is completed, a manual comparison between two image stores is strongly recommended. The location of native image store can be found by querying the primary replica: Get-WindowsFabricReplica -PartitionId 00000000-0000-0000-0000-000000003000)
@@ -49,5 +53,7 @@ ImageStoreCopier.exe /ConnectionEndpoint:"MININT-8MRQ409.redmond.corp.microsoft.
 4.	Do a 2nd fabric upgrade to make the native image store officially connected. Once the upgrade is completed, the verification can be done by invoking image store operation like doing provision/un-provision/creation/upgrade/deletion; the change of content at native image store is expected. Use image store tool compare command to verify the consistence by comparing the before – and – after view of original image store; since the tool generates a snapshot file called “imageStoreSnapshot.sp” which contains serialized content objects. When the 2nd upgrade is completed, execute the following command and comparison result will be printed out to the screen.
 
 ```json
-   ImageStoreCopier.exe /ConnectionEndpoint:"localhost:19000" /SourceImageStore:"file:C:\ProgramData\Windows Fabric\ImageStore" /Compare
+
+ImageStoreCopier.exe /ConnectionEndpoint:"localhost:19000" /SourceImageStore:"file:C:\ProgramData\Windows Fabric\ImageStore" /Compare
+
 ```
