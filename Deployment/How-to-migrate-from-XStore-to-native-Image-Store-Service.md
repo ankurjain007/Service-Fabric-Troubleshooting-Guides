@@ -22,8 +22,6 @@ Register-WindowsFabricClusterPackage -ClusterManifestPath CurrentClusterManifest
 
 ```
 
-If running on PAAS V1, Port 445 should be added as input endpoint for SMB copy
-
 ## Migration Steps
 
 1. Prepare 2 updated cluster manifest files and do the provision. Updating the current cluster manifest by adding the following “ImageStoreService” configuration. Note: set the “Enabled” flag to “true” to create the new native image store.
